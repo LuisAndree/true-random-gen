@@ -1,24 +1,31 @@
 const getRandom = async (min, max, base, num, col) => {
     try {
         const response = await fetch(`https://www.random.org/integers/?num=${num}&min=${min}&max=${max}&col=${col}&base=${base}&format=plain&rnd=new`);
+
         if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
+            throw new Error(`Erro na requisição: ${response.statusText}`);
         }
 
         const randomNumbers = await response.text();
         return randomNumbers.trim(); 
     } catch (err) {
-        console.error('Error', err);
+        console.error('Error:', err);
+        return "Error";
     }
 };
 
-(async () => {
-    const min = 1;
-    const max = 100;
-    const base = 10; 
-    const num = 50; 
-    const col = 10; 
+async function gerarNumerosTRNGs() {
+    const min = document.getElementById("min").value;
+    const max = document.getElementById("max").value;
+    const base = document.getElementById("base").value;
+    const num = document.getElementById("num").value;
+    const col = document.getElementById("col").value;
 
-    const random = await getRandom(min, max, base, num, col);
-    console.log(`numeros gerados:\n${random}`);
-})();
+    if (!min || !max || !base || !num || !col) {
+        document.getElementById("result").innerText = "preencha todos os campos!";
+        return;
+    }
+
+    const result = await getRandom(min, max, base, num, col);
+    document.getElementById("result").innerText = `Numeros gerados:\n${result}`;
+}
